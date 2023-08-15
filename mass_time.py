@@ -11,15 +11,12 @@ else:
     from io import StringIO
     
     
-
-
 import warnings
 warnings.filterwarnings('ignore')
 
 
 
-masses = np.arange(15, 105, 5)
-
+masses = np.arange(16, 102, 2)
 data = pd.DataFrame()
 times = pd.DataFrame()
 data.insert(loc= 0 , column='MASS', value=masses)
@@ -69,19 +66,25 @@ new
 
 
 from scipy.optimize import curve_fit
+from scipy.interpolate import CubicSpline
+import matplotlib.pyplot as plt
 
-def func(x, a, b, c):
-    return a * np.exp(-b * x) + c
 
+def func(x, b):
+    return 16 * (x/12.8127) ** (-1/b)
 
 xdata=new['MASS']
 ydata=new['TIME']
 popt, pcov = curve_fit(func, xdata, ydata, maxfev=5000)
 
 plt.plot(xdata, func(xdata, *popt), 'r--',
-         label='exp: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
+         label='power-law: b=%5.3f' % tuple(popt))
 
-plt.plot(xdata, ydata, 'o', markersize=3, label='data')
+plt.plot(xdata, ydata, 'o', markersize=4, label='data')
+
+cs = CubicSpline(xdata, ydata)
+xs = np.arange(16, 102, 0.0001)
+plt.plot(xs, cs(xs), label="cubic spline", color='yellow')
 
 plt.legend()
 plt.show()
