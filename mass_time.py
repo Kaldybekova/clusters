@@ -70,15 +70,16 @@ from scipy.interpolate import CubicSpline
 import matplotlib.pyplot as plt
 
 
-def func(x, b):
-    return 16 * (x/12.8127) ** (-1/b)
+def func(x):
+    return 16 * (x/12.8127) ** (-1/1.7)
 
 xdata=new['MASS']
 ydata=new['TIME']
-popt, pcov = curve_fit(func, xdata, ydata, maxfev=5000)
+# popt, pcov = curve_fit(func, xdata, ydata) #maxfev=5000)
 
-plt.plot(xdata, func(xdata, *popt), 'r--',
-         label='power-law: b=%5.3f' % tuple(popt))
+plt.plot(xdata, func(xdata), 'r--',
+         label='power-law: b=1.7')
+
 
 plt.plot(xdata, ydata, 'o', markersize=4, label='data')
 
